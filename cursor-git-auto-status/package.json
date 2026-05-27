@@ -1,0 +1,41 @@
+{
+  "name": "auto-git-status",
+  "displayName": "Auto Git Status",
+  "description": "打开项目时自动执行 git fetch && git status 并弹窗提示版本与文件信息",
+  "version": "0.0.1",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "autoGitStatus.run",
+        "title": "Auto Git Status: 立即执行 git fetch && status"
+      }
+    ],
+    "configuration": {
+      "title": "Auto Git Status",
+      "properties": {
+        "autoGitStatus.runOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "打开项目时自动执行。"
+        },
+        "autoGitStatus.useModal": {
+          "type": "boolean",
+          "default": true,
+          "description": "使用模态弹窗(true)还是右下角通知(false)展示结果。"
+        }
+      }
+    }
+  }
+}

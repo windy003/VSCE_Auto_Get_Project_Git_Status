@@ -93,6 +93,11 @@ function activate(context) {
     vscode.commands.registerCommand('autoGitStatus.run', runAll)
   );
 
+  // 打开本扩展的输出面板通道(快捷键 ctrl+shift+alt+g)
+  context.subscriptions.push(
+    vscode.commands.registerCommand('autoGitStatus.showOutput', () => output.show(true))
+  );
+
   // 启动时自动执行(可在设置中关闭)
   if (vscode.workspace.getConfiguration('autoGitStatus').get('runOnStartup', true)) {
     runAll();

@@ -20,6 +20,17 @@
       {
         "command": "autoGitStatus.run",
         "title": "Auto Git Status: 立即执行 git fetch && status"
+      },
+      {
+        "command": "autoGitStatus.showOutput",
+        "title": "Auto Git Status: 打开输出面板通道"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "autoGitStatus.showOutput",
+        "key": "ctrl+shift+alt+g",
+        "mac": "cmd+shift+alt+g"
       }
     ],
     "configuration": {

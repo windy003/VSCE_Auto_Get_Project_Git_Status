@@ -63,86 +63,10 @@ async function checkFolder(folder) {
   const fetchNote = fetch.stderr.trim() ? `git fetch:\n${fetch.stderr.trim()}\n\n` : '';
   const detail = fetchNote + statusText;
 
-  // 4a) 先打开常驻的 Webview 面板(无任何按钮,按 Esc 关闭,可随时回看)
-  showResultPanel(`「${name}」Git 状态`, `检查时间: ${ts}\n\n${detail}`);
-
-  // 4b) 再弹出原生模态弹窗做即时提醒(只剩默认的"确定",无误触发风险)
+  // 弹出原生模态弹窗做即时提醒(只剩默认的"确定",无误触发风险)
   await vscode.window.showInformationMessage(`「${name}」Git 状态`, {
     modal: true,
     detail: `检查时间: ${ts}\n\n${detail}`,
-  });
-}
-
-/** HTML 转义,防止内容破坏页面结构。 */
-function escapeHtml(text) {
-  return String(text)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-/**
- * 用 Webview 面板展示结果:页面里没有任何按钮,只有按下 Esc 键才会关闭。
- * 面板常驻为一个编辑器标签页,即使关掉了模态弹窗也能回看内容。
- */
-function showResultPanel(title, detail) {
-  const panel = vscode.window.createWebviewPanel(
-    'autoGitStatusResult',
-    title,
-    { viewColumn: vscode.ViewColumn.Active, preserveFocus: true },
-    { enableScripts: true }
-  );
-
-  panel.webview.html = `<!DOCTYPE html>
-<html lang="zh">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body {
-    font-family: var(--vscode-font-family);
-    color: var(--vscode-foreground);
-    background: var(--vscode-editor-background);
-    padding: 16px;
-  }
-  h2 { margin-top: 0; }
-  pre {
-    white-space: pre-wrap;
-    word-break: break-all;
-    font-family: var(--vscode-editor-font-family, monospace);
-    font-size: var(--vscode-editor-font-size, 13px);
-    background: var(--vscode-textCodeBlock-background);
-    padding: 12px;
-    border-radius: 4px;
-  }
-  .hint { opacity: 0.7; margin-bottom: 12px; }
-</style>
-</head>
-<body tabindex="0">
-  <h2>${escapeHtml(title)}</h2>
-  <div class="hint">按 Esc 键关闭此窗口</div>
-  <pre>${escapeHtml(detail)}</pre>
-  <script>
-    const vscodeApi = acquireVsCodeApi();
-    // 让页面获得焦点,确保能捕获按键
-    window.focus();
-    document.body.focus();
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        vscodeApi.postMessage({ type: 'close' });
-      }
-    });
-  </script>
-</body>
-</html>`;
-
-  panel.webview.onDidReceiveMessage((message) => {
-    if (message && message.type === 'close') {
-      panel.dispose();
-    }
   });
 }
 
